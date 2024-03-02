@@ -16,16 +16,13 @@ import axios from "axios";
 
 const checkIfWordIsValid = async (word) => {
   const URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
-  await axios
-    .get(URL + word, { timeout: 10000 })
-    .then((response) => {
-      console.log(response);
-      return true;
-    })
-    .catch((error) => {
-      console.error(error);
-      return false;
-    });
+  try {
+    const response = await axios.get(URL + word, { timeout: 10000 });
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 };
 
 export default function WordGame() {
@@ -39,7 +36,7 @@ export default function WordGame() {
 
   const generateRandomAlphabet = () => {
     // Create an array of all the letters in the alphabet
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZUAAAEEIIOOU";
 
     // Get a random index from the array
     const randomIndex = Math.floor(Math.random() * alphabet.length);
@@ -72,7 +69,7 @@ export default function WordGame() {
     getRandomAlphabet();
     let word = player === "p1" ? player1Word : player2Word;
     console.log(word.length);
-    if (word.length > 3) {
+    if (word.length >= 4) {
       const isWordValid = checkIfWordIsValid(word);
       if (isWordValid) {
         console.log("The word is valid.");
@@ -90,10 +87,10 @@ export default function WordGame() {
       <Grid
         container
         columnSpacing={1}
-        sx={{ height: "100vh", bgcolor: "black", p: 1 }}
+        sx={{ height: "100vh", bgcolor: "#f0f0f0", p: 1 }}
       >
         <Grid item xs={4}>
-          <Typography sx={{ color: "white" }}>Player 1</Typography>
+          <Typography sx={{ color: "#333333", fontWeight: "bold" }}>Player 1</Typography>
           <Stack
             spacing={2}
             direction="row"
@@ -108,15 +105,15 @@ export default function WordGame() {
             {player === "p1" && (
               <>
                 <Button
-                  variant="outlined"
-                  sx={{ color: "green", borderColor: "green" }}
+                  variant="contained"
+                  sx={{ bgcolor: "#4CAF50", color: "#ffffff", "&:hover": { bgcolor: "#388E3C" } }}
                   onClick={handlePlayer1}
                 >
                   Add
                 </Button>
                 <Button
-                  variant="outlined"
-                  sx={{ color: "red", borderColor: "red" }}
+                  variant="contained"
+                  sx={{ bgcolor: "#F44336", color: "#ffffff", "&:hover": { bgcolor: "#D32F2F" } }}
                   onClick={togglePlayer}
                 >
                   Pass
@@ -136,19 +133,21 @@ export default function WordGame() {
             }}
           >
             {player1Word !== "" ? (
-              Array.from(player1Word).map((alphabet) => {
+              Array.from(player1Word).map((alphabet, index) => {
                 return (
                   <Box
+                    key={index}
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: "white",
+                      bgcolor: "#ffffff",
+                      color: "#333333",
                       m: 1,
                       height: "50px",
                       width: "50px",
+                      borderRadius: "5px",
                     }}
-                    key={player1Word.indexOf(alphabet)}
                   >
                     {alphabet}
                   </Box>
@@ -160,10 +159,11 @@ export default function WordGame() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "white",
+                  bgcolor: "#ffffff",
                   m: 1,
                   height: "50px",
                   width: "50px",
+                  borderRadius: "5px",
                 }}
               >
                 {" "}
@@ -171,7 +171,7 @@ export default function WordGame() {
             )}
           </Stack>
           <Grid container direction="row">
-            {player1Word.length > 3 ? (
+            {player1Word.length >= 4 ? (
               result ? (
                 <Alert
                   sx={{ m: 1, width: "100%" }}
@@ -186,20 +186,20 @@ export default function WordGame() {
                   variant="filled"
                   severity="warning"
                 >
-                  This is a invalid word.
+                  This is an invalid word.
                 </Alert>
               )
             ) : (
-              ""
+              <Typography sx={{ m: 1 }}></Typography>
             )}
           </Grid>
         </Grid>
         <Divider
           orientation="vertical"
           flexItem
-          sx={{ borderColor: "white" }}
+          sx={{ borderColor: "#333333" }}
         />
-        <Grid item xs={4}>
+        <Grid item xs={4} sx={{ textAlign: "center" }}>
           <Box
             sx={{
               display: "flex",
@@ -221,6 +221,10 @@ export default function WordGame() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                bgcolor: "#ffffff",
+                color: "#333333",
+                padding: "10px",
+                borderRadius: "10px",
               }}
             >
               {randomAlphabet}
@@ -255,10 +259,10 @@ export default function WordGame() {
         <Divider
           orientation="vertical"
           flexItem
-          sx={{ borderColor: "white" }}
+          sx={{ borderColor: "#333333" }}
         />
         <Grid item xs={3}>
-          <Typography sx={{ color: "white" }}>Player 2</Typography>
+          <Typography sx={{ color: "#333333", fontWeight: "bold" }}>Player 2</Typography>
           <Stack
             spacing={2}
             direction="row"
@@ -273,15 +277,15 @@ export default function WordGame() {
             {player === "p2" && (
               <>
                 <Button
-                  variant="outlined"
-                  sx={{ color: "green", borderColor: "green" }}
+                  variant="contained"
+                  sx={{ bgcolor: "#4CAF50", color: "#ffffff", "&:hover": { bgcolor: "#388E3C" } }}
                   onClick={handlePlayer2}
                 >
                   Add
                 </Button>
                 <Button
-                  variant="outlined"
-                  sx={{ color: "red", borderColor: "red" }}
+                  variant="contained"
+                  sx={{ bgcolor: "#F44336", color: "#ffffff", "&:hover": { bgcolor: "#D32F2F" } }}
                   onClick={togglePlayer}
                 >
                   Pass
@@ -301,19 +305,21 @@ export default function WordGame() {
             }}
           >
             {player2Word !== "" ? (
-              Array.from(player2Word).map((alphabet) => {
+              Array.from(player2Word).map((alphabet, index) => {
                 return (
                   <Box
+                    key={index}
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: "white",
+                      bgcolor: "#ffffff",
+                      color: "#333333",
                       m: 1,
                       height: "50px",
                       width: "50px",
+                      borderRadius: "5px",
                     }}
-                    key={player2Word.indexOf(alphabet)}
                   >
                     {alphabet}
                   </Box>
@@ -325,16 +331,30 @@ export default function WordGame() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "white",
+                  bgcolor: "#ffffff",
                   m: 1,
                   height: "50px",
                   width: "50px",
+                  borderRadius: "5px",
                 }}
               >
                 {" "}
               </Box>
             )}
           </Stack>
+        </Grid>
+        <Grid item xs={12} sx={{ textAlign: "center", mt: 2 }}>
+          <Typography sx={{ color: "#333333", fontStyle: "italic" }}>
+            Rules:
+            <br />
+            1. Minimum 4 lettered word is allowed.
+            <br />
+            2. Add or pass the letter to make your word.
+            <br />
+            3. The game happens turn by turn.
+            <br />
+            4. The first to make a valid 4 or more lettered word wins.
+          </Typography>
         </Grid>
       </Grid>
     </div>
