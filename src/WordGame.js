@@ -81,6 +81,30 @@ export default function WordGame() {
     }
   }, [player, player1Word, player2Word]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (player === "p1") {
+        if (event.key === "a" || event.key === "A") {
+          handlePlayer1();
+        } else if (event.key === "d" || event.key === "D") {
+          togglePlayer();
+        }
+      } else if (player === "p2") {
+        if (event.key === "ArrowLeft") {
+          handlePlayer2();
+        } else if (event.key === "ArrowRight") {
+          togglePlayer();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [player, handlePlayer1, handlePlayer2, togglePlayer]);
+
   return (
     <div>
       <Header />
@@ -354,6 +378,13 @@ export default function WordGame() {
             3. The game happens turn by turn.
             <br />
             4. The first to make a valid 4 or more lettered word wins.
+          </Typography>
+          <Typography sx={{ color: "#333333", fontStyle: "italic", mt: 2 }}>
+            Controls:
+            <br />
+            Player 1: A - Add, D - Pass
+            <br />
+            Player 2: Left Arrow - Add, Right Arrow - Pass
           </Typography>
         </Grid>
       </Grid>
